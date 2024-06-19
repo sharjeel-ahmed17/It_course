@@ -1,29 +1,59 @@
-#! /usr/bin/env node
+#!/usr/bin/env node
 import inquirer from "inquirer";
-let answer = await inquirer.prompt([
-    { message: "enter First number", type: "number", name: "firstNumber" },
-    { message: "enter Second number", type: "number", name: "secondNumber" },
-    {
-        message: "enter operation",
-        type: "list",
-        name: "operation",
-        choices: ["addition", "subtraction", "multiplication", "division"],
-    },
-]);
-// console.log(answer);
-// console.log(`your number is ${answer.firstNumber}`);
-if (answer.operation === "addition") {
-    console.log(answer.firstNumber + answer.secondNumber);
+class Student {
+    name;
+    constructor(name) {
+        this.name = name;
+    }
 }
-else if (answer.operation === "subtraction") {
-    console.log(answer.firstNumber - answer.secondNumber);
+class Person {
+    students = [];
+    addStudent(student) {
+        this.students.push(student);
+    }
 }
-else if (answer.operation === "multiplication") {
-    console.log(answer.firstNumber * answer.secondNumber);
-}
-else if (answer.operation === "division") {
-    console.log(answer.firstNumber / answer.secondNumber);
-}
-else {
-    console.log("invalid a valid operator");
-}
+const persons = new Person();
+const programStart = async (person) => {
+    do {
+        console.log("WELCOME TO MY SITE");
+        const answer = await inquirer.prompt([
+            {
+                name: "select",
+                type: "list",
+                message: "Whom would you like to interact with?",
+                choices: ["staff", "student", "exit"],
+            },
+        ]);
+        if (answer.select === "staff") {
+            console.log("You approach the staff room. Please feel free to ask any questions.");
+        }
+        else if (answer.select === "student") {
+            const studentAnswer = await inquirer.prompt([
+                {
+                    name: "name",
+                    type: "input",
+                    message: "What is your name? Who would you like to engage with?",
+                },
+            ]);
+            const existingStudent = person.students.find((student) => student.name === studentAnswer.name);
+            if (!existingStudent) {
+                const newStudent = new Student(studentAnswer.name);
+                person.addStudent(newStudent);
+                console.log(`Hello, I am ${newStudent.name}. Nice to meet you!`);
+                console.log("New student added successfully.");
+                console.log("Current student list:");
+                console.log(person.students.map((student) => student.name));
+            }
+            else {
+                console.log(`Hello, I am ${existingStudent.name}. Nice to meet you!`);
+                console.log("Existing student list:");
+                console.log(person.students.map((student) => student.name));
+            }
+        }
+        else if (answer.select === "exit") {
+            console.log("Exiting the program.");
+            process.exit();
+        }
+    } while (true);
+};
+programStart(persons);
