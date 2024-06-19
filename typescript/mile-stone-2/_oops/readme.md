@@ -1,7 +1,7 @@
 # calculator
 
 ```
-calculator cli projects
+oops projects
 ```
 
 this is cli calculator
